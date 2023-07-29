@@ -128,12 +128,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AmFmRadio.cpp" />
-    <ClCompile Include="carDriver.cpp" />
+    <ClCompile Include="ultimateRadio.cpp" />
     <ClCompile Include="PioneerCarRadio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AmFmRadio.h" />
+    <ClInclude Include="PioneerAM.h" />
     <ClInclude Include="PioneerCarRadio.h" />
+    <ClInclude Include="PioneerWorld.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

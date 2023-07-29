@@ -1,6 +1,6 @@
 /*
 * Filename: AmFmRadio.cpp
-* Project: OOP-assign2 (and assign4, 6)
+* Project: OOP-assign2 (and assign4)
 * Student ID: 8790144
 * By: Jongeon Lee
 * Date: Jul 29, 2023
@@ -31,7 +31,7 @@ using namespace std;
 AmFmRadio::AmFmRadio(bool On) {
     
     // Initialize member variables
-    on = true;
+    on = false;
     userVolume = (int)0;
     volume = (int)0;
     previousVolume = (int)0;
@@ -42,12 +42,14 @@ AmFmRadio::AmFmRadio(bool On) {
     strcpy(userInputBuf, "\0");
     current_station = (double)530.0;
     SetDisplayOutput(true);
+    copyBand = new char[3];
     for (int i = 0; i < 5; ++i) {
         presets[i].AMFreq = (int)530;
     }
     for (int j = 0; j < 5; ++j) {
         presets[j].FMFreq = (float)87.9;
     }
+    displayDestructor = true;
 }
 
 
@@ -62,7 +64,7 @@ AmFmRadio::AmFmRadio(bool On) {
 
 AmFmRadio::AmFmRadio(bool On, Freqs initPresets[5]) {
     // Initialize member variables with initial presets
-    on = true;
+    on = false;
     userVolume = (int)0;
     volume = (int)0;
     previousVolume = (int)0;
@@ -73,20 +75,12 @@ AmFmRadio::AmFmRadio(bool On, Freqs initPresets[5]) {
     strcpy(userInputBuf, "\0");
     current_station = (double)530.0;
     SetDisplayOutput(on);
+    copyBand = new char[3];
     for (int i = 0; i < 5; ++i) {
         presets[i].AMFreq = initPresets[i].AMFreq;
         presets[i].FMFreq = initPresets[i].FMFreq;
     }
-}
-
-
-/*
-* Function: ~AmFmRadio()
-* Description: destructor of AmFmRadio
-*/
-
-AmFmRadio::~AmFmRadio() {
-    cout << "Destroying AmFmRadio" << endl;
+    displayDestructor = true;
 }
 
 
@@ -380,7 +374,7 @@ void AmFmRadio::ScanDown() {
 * Returns: return current volume as int.
 */
 
-int AmFmRadio::GetCurrentVolume() {
+int AmFmRadio::GetCurrentVolume() const {
     return volume;
 }
 
@@ -392,7 +386,7 @@ int AmFmRadio::GetCurrentVolume() {
 * Returns: return current requency as struct Freqs.
 */
 
-Freqs AmFmRadio::GetCurrentFrequency() {
+Freqs AmFmRadio::GetCurrentFrequency() const {
     return currentFreq;
 }
 
@@ -404,7 +398,7 @@ Freqs AmFmRadio::GetCurrentFrequency() {
 * Returns: return displayOutput as bool.
 */
 
-bool AmFmRadio::GetDisplayOutput() {
+bool AmFmRadio::GetDisplayOutput() const {
     return displayOutput;
 }
 
@@ -442,9 +436,7 @@ bool AmFmRadio::GetPowerOn() {
 */
 
 const char* AmFmRadio::GetBand() {
-    char* copyBand = new char[strlen(band)+1];
-    strcpy(copyBand, band);
-    return copyBand;
+    return band; 
 }
 
 
@@ -456,11 +448,9 @@ const char* AmFmRadio::GetBand() {
 */
 
 Freqs AmFmRadio::GetPresets(int i) {
-    Freqs copyPreset;
-    copyPreset.AMFreq = presets[i].AMFreq;
-    copyPreset.FMFreq = presets[i].FMFreq;
-    return copyPreset;
+    return presets[i];
 }
+
 
 
 /*
@@ -470,6 +460,38 @@ Freqs AmFmRadio::GetPresets(int i) {
 * Returns: return current station value as double
 */
 
-double AmFmRadio::SetCurrentStation() {
+double AmFmRadio::SetCurrentStation(double setValue) {
+    if (on) {
+        if (strcmp(band, "AM") == 0) {
+            currentFreq.AMFreq = (int)setValue;
+            current_station = (double)currentFreq.AMFreq;
+        }
+        else {
+            currentFreq.FMFreq = (float)setValue;
+            current_station = (double)currentFreq.FMFreq;
+        }
+    }
     return current_station;
+}
+
+double AmFmRadio::GetCurrentStation() {
+    return current_station; 
+}
+
+
+void AmFmRadio::ToggleFrequency() {
+    if (strcmp(band, "AM") == 0) {
+        strcpy(band, "FM");
+        current_station = currentFreq.FMFreq;
+    }
+    else {
+        strcpy(band, "AM");
+        current_station = currentFreq.AMFreq;
+    }
+}
+
+void AmFmRadio::SetInitialFreqWorld() {
+    for (int i = 0; i < 5; ++i) {
+        presets[i].AMFreq = (int)531;
+    }
 }

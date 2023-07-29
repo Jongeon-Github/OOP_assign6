@@ -9,6 +9,7 @@
 
 #include "PioneerCarRadio.h"
 #include "AmFmRadio.h"
+#include <cstring>
 #include <iostream>
 #include <conio.h>
 #include <iomanip>
@@ -24,20 +25,20 @@ using namespace std;
 * Parameters: None
 */
 
-PioneerCarRadio::PioneerCarRadio() {
-    // Start with the radio off
-    AmFmRadio::PowerToggle();
+PioneerCarRadio::PioneerCarRadio() : AmFmRadio() {
+    displayDestructor = true;
 }
-
 
 /*
 * Function: ~PioneerCarRadio()
 * Description: Destructor for the PioneerCarRadio class.
 * Parameters: None
 */
-
 PioneerCarRadio::~PioneerCarRadio() {
-    cout << "PioneerCarRadio is being destroyed." << std::endl;
+    if (displayDestructor){
+        cout << "Destroying Pioneer XS440 Radio" << endl;
+    }
+    displayDestructor = false;
 }
 
 
@@ -86,10 +87,10 @@ void PioneerCarRadio::UserKey(char key) {
         AmFmRadio::SetVolume(currentVolume);
         break;
     case '=':
-        AmFmRadio::ScanUp();
+        ScanUp();
         break;
     case '-':
-        AmFmRadio::ScanDown();
+        ScanDown();
         break;
     case 'b':
         AmFmRadio::ToggleBand();
@@ -140,12 +141,11 @@ void PioneerCarRadio::UserKey(char key) {
 * Returns: None
 */
 
-//void PioneerCarRadio::DisplayPioneerRadio() {
 void PioneerCarRadio::ShowCurrentSettings() {
         // Display the status and information of the car radio
-    if (AmFmRadio::GetPowerOn() == true) {
-        double current_station = round(AmFmRadio::SetCurrentStation() * 100) / 100;
-        cout << "Pioneer XS440" << endl;
+    if (AmFmRadio::GetPowerOn()) {
+        double current_station = round(AmFmRadio::GetCurrentStation() * 100) / 100;
+        cout << "Pioneer XS440 Radio" << endl;
         cout << (AmFmRadio::GetPowerOn() ? "Radio is On" : "Radio is Off") << endl;
         cout << "Volume: " << AmFmRadio::GetCurrentVolume() << endl;
         cout << "Current Station: " << current_station << " " << AmFmRadio::GetBand() << endl;
@@ -171,7 +171,83 @@ void PioneerCarRadio::ShowCurrentSettings() {
         }
     }
     else {
-        cout << "Pioneer XS440" << endl;
+        cout << "Pioneer XS440 Radio" << endl;
         cout << (AmFmRadio::GetPowerOn() ? "Radio is On" : "Radio is Off") << endl << endl;
     }
+}
+
+
+/*
+* Function: ToggleFrequency()
+* Description: Displays the status and information of the Pioneer car radio.
+* Parameters: None
+* Returns: None
+*/
+
+void PioneerCarRadio::ToggleFrequency() {
+    // Toggle between FM and AM bands.
+    if (strcmp(GetBand(), "AM") == 0) {
+        SetCurrentStation((double)87.9);
+    }
+    else {
+        SetCurrentStation((double)530);
+    }
+}
+
+
+
+/*
+* Function: ScanUp()
+* Description: Change radio frequency to increase.
+* Parameters: None
+* Returns: None
+*/
+
+void PioneerCarRadio::ScanUp() {
+    double currentFrequency = GetCurrentStation();
+    if (strcmp(GetBand(), "AM") == 0) {
+        if (currentFrequency < 1700.0) {
+            currentFrequency += 10.0;
+        }
+        else {
+            currentFrequency = 530.0;
+        }
+    }
+    else {
+        if (currentFrequency < 107.9) {
+            currentFrequency += 0.2;
+        }
+        else {
+            currentFrequency = 87.9;
+        }
+    }
+    SetCurrentStation(currentFrequency);
+}
+
+/*
+* Function: ScanDown()
+* Description: Change radio frequency to decrease.
+* Parameters: None
+* Returns: None
+*/
+
+void PioneerCarRadio::ScanDown() {
+    double currentFrequency = GetCurrentStation();
+    if (strcmp(GetBand(), "AM") == 0) {
+        if (currentFrequency > 530.0) {
+            currentFrequency -= 10.0;
+        }
+        else {
+            currentFrequency = 1700.0;
+        }
+    }
+    else {
+        if (currentFrequency > 87.9) {
+            currentFrequency -= 0.2;
+        }
+        else {
+            currentFrequency = 107.9;
+        }
+    }
+    SetCurrentStation(currentFrequency);
 }

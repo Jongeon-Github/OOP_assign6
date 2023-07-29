@@ -18,7 +18,7 @@
     <ClCompile Include="AmFmRadio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="carDriver.cpp">
+    <ClCompile Include="ultimateRadio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PioneerCarRadio.cpp">
@@ -30,6 +30,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PioneerCarRadio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PioneerAM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PioneerWorld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,21 +12,29 @@
 
 #include "AmFmRadio.h"
 
+using namespace std;
+
 class PioneerCarRadio : public AmFmRadio
 {
 private:
-    // Gets key from user`s input
-    void UserKey(char key);
-
-    // Display all information of car radio
-    void ShowCurrentSettings();
 
 public:
     // Constructor and Destructor
     PioneerCarRadio();
-    ~PioneerCarRadio();
+    virtual ~PioneerCarRadio();
+
+    // Gets key from user`s input
+    void UserKey(char key);
 
     // Runs the car radio program
     void Run();
+
+    // Display all information of car radio
+    virtual void ShowCurrentSettings();
+
+    virtual void ToggleFrequency();
+    virtual void ScanUp();
+    virtual void ScanDown();
+    
 };
 #endif  
